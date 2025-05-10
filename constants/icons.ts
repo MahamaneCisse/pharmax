@@ -32,7 +32,7 @@ import wifi from "@/assets/icons/wifi.png";
 import location from "@/assets/icons/location.png";
 import edit from "@/assets/icons/edit.png";
 import apple from "@/assets/icons/apple.png";
-
+import appel_durgence from "@/assets/icons/appel-durgence.png";
 export default {
   google,
   apple,
@@ -68,4 +68,5 @@ export default {
   wifi,
   location,
   edit,
+  appel_durgence,
 };

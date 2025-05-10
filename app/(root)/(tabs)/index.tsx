@@ -98,8 +98,8 @@ const Index = () => {
               </View>
               <TouchableOpacity onPress={appeler}>
                 <Image
-                  source={icons.phone}
-                  style={{ width: 20, height: 20 }}
+                  source={icons.appel_durgence}
+                  style={{ width: 24, height: 24 }}
                   alt="Appel d'urgence"
                 />
               </TouchableOpacity>

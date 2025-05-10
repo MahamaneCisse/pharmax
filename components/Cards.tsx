@@ -17,7 +17,13 @@ export const FeaturedCard = ({ item, onPress }: Props) => {
     >
       <View className="h-full w-1/3 border-r border-gray-800">
         <View className="flex justify-center items-center w-full h-1/2">
-          <View className="bg-transparent w-20 h-20 rounded-full border-2 border-green-600"></View>
+          <View className="bg-transparent w-20 h-20 rounded-full border-2 border-green-600">
+            <Image
+              source={images.logoPharm}
+              className="w-full h-full rounded-full"
+              resizeMode="contain"
+            />
+          </View>
         </View>
         <View className="flex justify-center items-center w-full h-1/2">
           <View className="w-full h-full flex justify-center items-center">

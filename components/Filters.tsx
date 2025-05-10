@@ -7,13 +7,13 @@ import { categories } from "@/constants/data";
 const Filters = () => {
   const params = useLocalSearchParams<{ filter?: string }>();
   const [selectedCategory, setSelectedCategory] = useState(
-    params.filter || "All"
+    params.filter || "Toutes"
   );
 
   const handleCategoryPress = (category: string) => {
     if (selectedCategory === category) {
-      setSelectedCategory("All");
-      router.setParams({ filter: "All" });
+      setSelectedCategory("Tous");
+      router.setParams({ filter: "Tous" });
       return;
     }
 
