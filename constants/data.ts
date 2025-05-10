@@ -135,30 +135,3 @@ export const facilities = [
     icon: icons.dog,
   },
 ];
-
-export const gallery = [
-  {
-    id: 1,
-    image: images.newYork,
-  },
-  {
-    id: 2,
-    image: images.japan,
-  },
-  {
-    id: 3,
-    image: images.newYork,
-  },
-  {
-    id: 4,
-    image: images.japan,
-  },
-  {
-    id: 5,
-    image: images.newYork,
-  },
-  {
-    id: 6,
-    image: images.japan,
-  },
-];

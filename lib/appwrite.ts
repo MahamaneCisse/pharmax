@@ -14,6 +14,9 @@ export const config = {
   platform: "com.abasco.native",
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
   projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID,
+  databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
+  pharmaciesCollectionId:
+    process.env.EXPO_PUBLIC_APPWRITE_PHARMACIES_COLLECTIONS_ID,
 };
 export const client = new Client();
 
@@ -79,11 +82,11 @@ export async function getCurrentUser() {
     return null;
   }
 }
-export async function getLatestProperties() {
+export async function getLatestPharmacies() {
   try {
     const result = await databases.listDocuments(
       config.databaseId!,
-      config.propertiesCollectionId!,
+      config.pharmaciesCollectionId!,
       [Query.orderAsc("$createdAt"), Query.limit(5)]
     );
 
@@ -94,7 +97,7 @@ export async function getLatestProperties() {
   }
 }
 
-export async function getProperties({
+export async function getPharmacies({
   filter,
   query,
   limit,
@@ -106,15 +109,15 @@ export async function getProperties({
   try {
     const buildQuery = [Query.orderDesc("$createdAt")];
 
-    if (filter && filter !== "All")
-      buildQuery.push(Query.equal("type", filter));
+    if (filter && filter !== "Toutes")
+      buildQuery.push(Query.equal("commune", filter));
 
     if (query)
       buildQuery.push(
         Query.or([
           Query.search("name", query),
-          Query.search("address", query),
-          Query.search("type", query),
+          Query.search("ville", query),
+          Query.search("commune", query),
         ])
       );
 
@@ -122,7 +125,7 @@ export async function getProperties({
 
     const result = await databases.listDocuments(
       config.databaseId!,
-      config.propertiesCollectionId!,
+      config.pharmaciesCollectionId!,
       buildQuery
     );
 
@@ -133,12 +136,11 @@ export async function getProperties({
   }
 }
 
-// write function to get property by id
-export async function getPropertyById({ id }: { id: string }) {
+export async function getPharmaciesById({ id }: { id: string }) {
   try {
     const result = await databases.getDocument(
       config.databaseId!,
-      config.propertiesCollectionId!,
+      config.pharmaciesCollectionId!,
       id
     );
     return result;

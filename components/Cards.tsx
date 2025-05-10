@@ -5,11 +5,14 @@ import { Models } from "react-native-appwrite";
 import React from "react";
 
 interface Props {
-  item?: Models.Document;
+  item: Models.Document;
   onPress?: () => void;
 }
 
-export const FeaturedCard = ({ item, onPress }: Props) => {
+export const FeaturedCard = ({
+  item: { horaire, name, ville, quartier, rue, porte },
+  onPress,
+}: Props) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -28,22 +31,20 @@ export const FeaturedCard = ({ item, onPress }: Props) => {
         <View className="flex justify-center items-center w-full h-1/2">
           <View className="w-full h-full flex justify-center items-center">
             <Text>Horaire</Text>
-            <Text>7H-22H</Text>
+            <Text>{horaire}</Text>
           </View>
         </View>
       </View>
       <View className="h-full w-2/3 px-1 py-1">
         <View className="w-full h-1/3 flex justify-center items-center border-b border-gray-800">
-          <Text className="font-rubik text-lg font-bold">
-            Pharmacie Mohamed V
-          </Text>
+          <Text className="font-rubik text-lg font-bold">{name}</Text>
         </View>
         <View className="w-full h-2/3 flex flex-row">
           <View className="w-3/4 px-2 pt-1 border-r border-gray-700">
-            <Text className="font-rubik-bold">Ville : Bamako</Text>
-            <Text className="font-rubik-bold">Quartier: Dabanani</Text>
-            <Text className="font-rubik-bold">Rue: 206</Text>
-            <Text className="font-rubik-bold">Porte: 2067</Text>
+            <Text className="font-rubik-bold">{ville}</Text>
+            <Text className="font-rubik-bold">{quartier}</Text>
+            <Text className="font-rubik-bold">Rue: {rue}</Text>
+            <Text className="font-rubik-bold">Porte: {porte}</Text>
           </View>
           <View className="bg- w-1/4 h-full">
             <View className="w-full h-1/2 border-b border-gray-800">
@@ -65,44 +66,6 @@ export const FeaturedCard = ({ item, onPress }: Props) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export const Card = ({ item, onPress }: Props) => {
-  return (
-    <TouchableOpacity
-      className="flex-1 w-full mt-4 px-3 py-4 rounded-lg bg-white shadow-lg shadow-black-100/70 relative"
-      onPress={onPress}
-    >
-      <View className="flex flex-row items-center absolute px-2 top-5 right-5 bg-white/90 p-1 rounded-full z-50">
-        <Image source={icons.star} className="size-2.5" />
-        <Text className="text-xs font-rubik-bold text-primary-300 ml-0.5">
-          4.4
-        </Text>
-      </View>
-
-      <Image source={images.pharmacie1} className="w-full h-40 rounded-lg" />
-
-      <View className="flex flex-col mt-2">
-        <Text className="text-base font-rubik-bold text-black-300">
-          Cozy Studio
-        </Text>
-        <Text className="text-xs font-rubik text-black-100">
-          22 W 15th St, Bamako
-        </Text>
-
-        <View className="flex flex-row items-center justify-between mt-2">
-          <Text className="text-base font-rubik-bold text-primary-300">
-            30 000 F CFA
-          </Text>
-          <Image
-            source={icons.heart}
-            className="w-5 h-5 mr-2"
-            tintColor="#191D31"
-          />
         </View>
       </View>
     </TouchableOpacity>
