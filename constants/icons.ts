@@ -33,6 +33,7 @@ import location from "@/assets/icons/location.png";
 import edit from "@/assets/icons/edit.png";
 import apple from "@/assets/icons/apple.png";
 import appel_durgence from "@/assets/icons/appel-durgence.png";
+import horloge from "@/assets/icons/horloge.png";
 export default {
   google,
   apple,
@@ -69,4 +70,5 @@ export default {
   location,
   edit,
   appel_durgence,
+  horloge,
 };

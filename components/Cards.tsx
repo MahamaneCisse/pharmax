@@ -16,57 +16,57 @@ export const FeaturedCard = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex flex-row items-start justify-between w-full h-44 relative py-1 bg-gray-200 rounded-lg overflow-hidden shadow-xl shadow-black"
+      className="flex-row items-center w-full bg-green-400 rounded-2xl shadow-md p-4  gap-4"
     >
-      <View className="h-full w-1/3 border-r border-gray-800">
-        <View className="flex justify-center items-center w-full h-1/2">
-          <View className="bg-transparent w-20 h-20 rounded-full border-2 border-green-600">
-            <Image
-              source={images.logoPharm}
-              className="w-full h-full rounded-full"
-              resizeMode="contain"
-            />
-          </View>
-        </View>
-        <View className="flex justify-center items-center w-full h-1/2">
-          <View className="w-full h-full flex justify-center items-center">
-            <Text>Horaire</Text>
-            <Text>{horaire}</Text>
-          </View>
-        </View>
+      {/* Logo */}
+      <View className="w-20 h-20 rounded-full border-2 border-green-500 overflow-hidden justify-center items-center">
+        <Image
+          source={images.logoPharm}
+          className="w-full h-full"
+          resizeMode="cover"
+        />
       </View>
-      <View className="h-full w-2/3 px-1 py-1">
-        <View className="w-full h-1/3 flex justify-center items-center border-b border-gray-800">
-          <Text className="font-rubik text-lg font-bold">{name}</Text>
+
+      {/* Content */}
+      <View className="flex-1">
+        {/* Header */}
+        <Text className="text-xl font-semibold text-gray-900">{name}</Text>
+
+        {/* Address */}
+        <View className="mt-1 space-y-0.5">
+          <Text className="text-gray-700">
+            {ville}, {quartier}
+          </Text>
+          <Text className="text-gray-600 text-sm">
+            Rue: {rue} | Porte: {porte}
+          </Text>
         </View>
-        <View className="w-full h-2/3 flex flex-row">
-          <View className="w-3/4 px-2 pt-1 border-r border-gray-700">
-            <Text className="font-rubik-bold">{ville}</Text>
-            <Text className="font-rubik-bold">{quartier}</Text>
-            <Text className="font-rubik-bold">Rue: {rue}</Text>
-            <Text className="font-rubik-bold">Porte: {porte}</Text>
+
+        {/* Horaire */}
+        <Text className="mt-2 text-sm text-green-600 font-medium">
+          <View>
+            <Image source={icons.horloge} className="size-4 mr-2" />
           </View>
-          <View className="bg- w-1/4 h-full">
-            <View className="w-full h-1/2 border-b border-gray-800">
-              <TouchableOpacity className="w-full h-full flex justify-center items-center">
-                <Image
-                  source={icons.phone}
-                  className="w-1/2 h-full"
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <View className="w-full h-1/2">
-              <TouchableOpacity className="w-full h-full flex justify-center items-center">
-                <Image
-                  source={icons.location}
-                  className="w-1/2 h-full"
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+          {horaire}
+        </Text>
+      </View>
+
+      {/* Actions */}
+      <View className="justify-between h-20">
+        <TouchableOpacity className="p-2">
+          <Image
+            source={icons.phone}
+            className="w-5 h-5"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity className="p-2">
+          <Image
+            source={icons.location}
+            className="w-5 h-5"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );

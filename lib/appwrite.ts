@@ -82,20 +82,6 @@ export async function getCurrentUser() {
     return null;
   }
 }
-export async function getLatestPharmacies() {
-  try {
-    const result = await databases.listDocuments(
-      config.databaseId!,
-      config.pharmaciesCollectionId!,
-      [Query.orderAsc("$createdAt"), Query.limit(5)]
-    );
-
-    return result.documents;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
 
 export async function getPharmacies({
   filter,

@@ -1,23 +1,29 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, Image, TextInput } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Image, TextInput } from "react-native";
 import { useDebouncedCallback } from "use-debounce";
 
 import icons from "@/constants/icons";
-import { useLocalSearchParams, router, usePathname } from "expo-router";
 
-const Search = () => {
-  const path = usePathname();
-  const params = useLocalSearchParams<{ query?: string }>();
-  const [search, setSearch] = useState(params.query);
+type SearchProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
 
-  const debouncedSearch = useDebouncedCallback((text: string) => {
-    router.setParams({ query: text });
-  }, 500);
+const Search = ({ value, onChange }: SearchProps) => {
+  const [search, setSearch] = useState(value);
+
+  const debouncedChange = useDebouncedCallback((text: string) => {
+    onChange(text);
+  }, 400); // 400ms debounce, tu peux ajuster
 
   const handleSearch = (text: string) => {
     setSearch(text);
-    debouncedSearch(text);
+    debouncedChange(text);
   };
+
+  useEffect(() => {
+    setSearch(value); // garde le champ sync si value change depuis le parent
+  }, [value]);
 
   return (
     <View className="flex flex-row items-center justify-between w-full px-4 rounded-lg bg-accent-100 border border-primary-100 mt-5 py-2">
