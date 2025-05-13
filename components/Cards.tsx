@@ -1,6 +1,6 @@
 import icons from "@/constants/icons";
 import images from "@/constants/images";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { Models } from "react-native-appwrite";
 import React from "react";
 
@@ -10,16 +10,18 @@ interface Props {
 }
 
 export const FeaturedCard = ({
-  item: { horaire, name, ville, quartier, rue, porte },
+  item: { horaire, name, ville, quartier, rue, porte, contact },
   onPress,
 }: Props) => {
+  const numero = contact;
+  const appeler = () => Linking.openURL(`tel:${numero}`);
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center w-full bg-green-400 rounded-2xl shadow-md p-4  gap-4"
+      className="flex-row items-center w-full bg-white rounded-2xl shadow-md p-4  gap-4"
     >
       {/* Logo */}
-      <View className="w-20 h-20 rounded-full border-2 border-green-500 overflow-hidden justify-center items-center">
+      <View className="w-20 h-20 rounded-full border-2 border-white overflow-hidden justify-center items-center">
         <Image
           source={images.logoPharm}
           className="w-full h-full"
@@ -53,7 +55,7 @@ export const FeaturedCard = ({
 
       {/* Actions */}
       <View className="justify-between h-20">
-        <TouchableOpacity className="p-2">
+        <TouchableOpacity className="p-2" onPress={appeler}>
           <Image
             source={icons.phone}
             className="w-5 h-5"

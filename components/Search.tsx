@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Image, TextInput } from "react-native";
 import { useDebouncedCallback } from "use-debounce";
-
 import icons from "@/constants/icons";
 
 type SearchProps = {
@@ -14,7 +13,7 @@ const Search = ({ value, onChange }: SearchProps) => {
 
   const debouncedChange = useDebouncedCallback((text: string) => {
     onChange(text);
-  }, 400); // 400ms debounce, tu peux ajuster
+  }, 1000);
 
   const handleSearch = (text: string) => {
     setSearch(text);
@@ -22,7 +21,7 @@ const Search = ({ value, onChange }: SearchProps) => {
   };
 
   useEffect(() => {
-    setSearch(value); // garde le champ sync si value change depuis le parent
+    setSearch(value);
   }, [value]);
 
   return (
