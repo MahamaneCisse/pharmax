@@ -52,10 +52,10 @@ const Profile = () => {
   const handleLogout = async () => {
     const result = await logout();
     if (result) {
-      Alert.alert("Success", "Logged out successfully");
+      Alert.alert("Succès", "Deconnexion réussie");
       refetch();
     } else {
-      Alert.alert("Error", "Failed to logout");
+      Alert.alert("Erreur", "Erreur lors de la déconnexion");
     }
   };
 
@@ -76,21 +76,12 @@ const Profile = () => {
               source={{ uri: user?.avatar }}
               className="size-44 relative rounded-full"
             />
-            <TouchableOpacity className="absolute bottom-11 right-2">
-              <Image source={icons.edit} className="size-9" />
-            </TouchableOpacity>
-
             <Text className="text-2xl font-rubik-bold mt-2">{user?.name}</Text>
           </View>
         </View>
 
-        {/* <View className="flex flex-col mt-10">
-          <SettingsItem icon={icons.calendar} title="My Bookings" />
-          <SettingsItem icon={icons.wallet} title="Payments" />
-        </View> */}
-
         <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
-          {settings.slice(2).map((item, index) => (
+          {settings.map((item, index) => (
             <SettingsItem key={index} {...item} />
           ))}
         </View>

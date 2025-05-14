@@ -11,7 +11,6 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
-
 import icons from "@/constants/icons";
 import Search from "@/components/Search";
 import NoResults from "@/components/NoResults";

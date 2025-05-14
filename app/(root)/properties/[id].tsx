@@ -9,6 +9,7 @@ import {
   Dimensions,
   Platform,
   Linking,
+  ActivityIndicator,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
@@ -18,7 +19,7 @@ import MapView, { Marker } from "react-native-maps";
 
 import { useAppwrite } from "@/lib/useAppwrite";
 import { getPharmaciesById } from "@/lib/appwrite";
-
+import Loader from "@/components/Loader";
 const Property = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
 
@@ -32,9 +33,14 @@ const Property = () => {
   });
 
   const openInMaps = () => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=12.6094822,-7.9119398`;
-    Linking.openURL(url);
+    if (property?.latitude && property?.longitude) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${property.latitude},${property.longitude}`;
+      Linking.openURL(url);
+    }
   };
+  if (!property) {
+    return <Loader />;
+  }
 
   return (
     <View>
@@ -44,7 +50,7 @@ const Property = () => {
       >
         <View className="relative w-full" style={{ height: windowHeight / 2 }}>
           <Image
-            source={images.logoPharm}
+            source={images.local}
             className="size-full"
             resizeMode="cover"
           />
@@ -69,7 +75,7 @@ const Property = () => {
 
               <View className="flex flex-row items-center gap-3">
                 <Image
-                  source={icons.heart}
+                  source={icons.phone}
                   className="size-7"
                   tintColor={"#191D31"}
                 />
@@ -81,7 +87,7 @@ const Property = () => {
 
         <View className="px-5 mt-7 flex gap-2">
           <Text className="text-2xl font-rubik-extrabold">
-            {property?.name}
+            Pharmacie {property?.name}
           </Text>
 
           <View className="flex flex-row items-center gap-3">
@@ -97,10 +103,10 @@ const Property = () => {
             </View>
 
             <View className="flex flex-row items-center gap-2">
-              <Image source={icons.star} className="size-5" />
               <Text className="text-black-200 text-sm mt-1 font-rubik-medium">
-                Note: {property?.notation}
+                Note: {property?.notation}/5
               </Text>
+              <Image source={icons.star} className="size-5" />
             </View>
           </View>
 
@@ -133,19 +139,19 @@ const Property = () => {
                 marginTop: 20,
               }}
               initialRegion={{
-                latitude: property?.latitude || 12.6094822, // valeur par défaut
-                longitude: property?.longitude || -7.9119398,
+                latitude: property?.latitude ?? 0,
+                longitude: property?.longitude ?? 0,
                 latitudeDelta: 0.005,
                 longitudeDelta: 0.005,
               }}
             >
               <Marker
                 coordinate={{
-                  latitude: property?.latitude || 12.6094822,
-                  longitude: property?.longitude || -7.9119398,
+                  latitude: property?.latitude ?? 0,
+                  longitude: property?.longitude ?? 0,
                 }}
                 title={property?.name || "Pharmacie"}
-                pinColor="green" // 🎯 Ceci rend le marker vert
+                pinColor="green"
               />
             </MapView>
           </View>

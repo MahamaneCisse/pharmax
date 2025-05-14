@@ -14,7 +14,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import icons from "@/constants/icons";
 import Search from "@/components/Search";
-import Filters from "@/components/Filters";
+import Loader from "@/components/Loader";
 import { FeaturedCard } from "@/components/Cards";
 import NoResults from "@/components/NoResults";
 
@@ -63,13 +63,7 @@ const Explore = () => {
         keyExtractor={(item) => item.$id}
         contentContainerClassName="pb-32 flex flex-col gap-6 w-full bg-white px-2"
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          loading ? (
-            <ActivityIndicator size="large" className="text-primary-300 mt-5" />
-          ) : (
-            <NoResults />
-          )
-        }
+        ListEmptyComponent={loading ? <Loader /> : <NoResults />}
         ListHeaderComponent={() => (
           <View className="px-5">
             <View className="flex flex-row items-center justify-between mt-8">
@@ -86,10 +80,12 @@ const Explore = () => {
                 debouncedRefetch(text);
               }}
             />
-            <Filters />
+            {/* <Filters /> */}
             <View className="mt-5">
               <Text className="text-xl font-rubik-bold text-black-300 mt-5">
-                {pharmacies?.length} résultats trouvés
+                {(pharmacies?.length ?? 0) <= 1
+                  ? `${pharmacies?.length ?? 0} pharmacie trouvée`
+                  : `${pharmacies?.length ?? 0} pharmacies trouvées`}
               </Text>
             </View>
           </View>

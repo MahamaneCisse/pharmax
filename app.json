@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "React_native_app",
-    "slug": "React_native_app",
+    "name": "pharmax",
+    "slug": "pharmax",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/pharmax.png",
+    "icon": "./assets/images/logopharm.jpeg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

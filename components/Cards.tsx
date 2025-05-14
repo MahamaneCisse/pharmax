@@ -3,6 +3,7 @@ import images from "@/constants/images";
 import { Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { Models } from "react-native-appwrite";
 import React from "react";
+import { router } from "expo-router";
 
 interface Props {
   item: Models.Document;
@@ -15,6 +16,7 @@ export const FeaturedCard = ({
 }: Props) => {
   const numero = contact;
   const appeler = () => Linking.openURL(`tel:${numero}`);
+
   return (
     <TouchableOpacity
       onPress={onPress}
