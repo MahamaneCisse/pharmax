@@ -10,7 +10,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import images from "@/constants/images";
 import icons from "@/constants/icons";
-import { login } from "@/lib/appwrite";
+import { login, loginWithApple } from "@/lib/appwrite";
 import { useGlobalContext } from "@/lib/global-provider";
 import { Redirect } from "expo-router";
 
@@ -76,17 +76,26 @@ const Auth = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={handleLogin}
-            className="bg-black py-4 shadow-md flex-row items-center justify-center"
+            onPress={async () => {
+              const result = await loginWithApple();
+              if (result) {
+                refetch();
+              } else {
+                Alert.alert("Erreur", "Échec de la connexion avec iCloud");
+              }
+            }}
+            className="bg-black shadow-md shadow-zinc-300 w-full py-4 mt-3 "
           >
-            <Image
-              source={icons.apple}
-              className="w-5 h-5 mr-3"
-              resizeMode="contain"
-            />
-            <Text className="text-base font-rubik-medium text-white">
-              Continuer avec iCloud
-            </Text>
+            <View className="flex flex-row items-center justify-center">
+              <Image
+                source={icons.apple}
+                className="w-5 h-5"
+                resizeMode="contain"
+              />
+              <Text className="text-lg font-rubik-medium text-white ml-2 shadow-black-300">
+                Continuez avec iCloud
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       </ScrollView>

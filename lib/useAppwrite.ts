@@ -33,7 +33,7 @@ export const useAppwrite = <T, P extends Record<string, string | number>>({
         setData(result);
       } catch (err: unknown) {
         const errorMessage =
-          err instanceof Error ? err.message : "An unknown error occurred";
+          err instanceof Error ? err.message : "une erreur s'est produite";
         setError(errorMessage);
         Alert.alert("Error", errorMessage);
       } finally {

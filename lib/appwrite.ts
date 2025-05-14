@@ -17,6 +17,7 @@ export const config = {
   databaseId: process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID,
   pharmaciesCollectionId:
     process.env.EXPO_PUBLIC_APPWRITE_PHARMACIES_COLLECTIONS_ID,
+  userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTIONS_ID,
 };
 export const client = new Client();
 
@@ -50,9 +51,43 @@ export async function login() {
     if (!secret || !userId) throw new Error("failed to login");
     const session = await account.createSession(userId, secret);
     if (!session) throw new Error("failed to create session");
+    await createUserIfNotExists();
     return true;
   } catch (error) {
     console.error(error);
+    return false;
+  }
+}
+
+export async function loginWithApple() {
+  try {
+    const redirectUri = Linking.createURL("/");
+
+    const response = await account.createOAuth2Token(
+      OAuthProvider.Apple,
+      redirectUri
+    );
+    if (!response)
+      throw new Error("Échec lors de la création du token OAuth Apple");
+
+    const browserResult = await openAuthSessionAsync(
+      response.toString(),
+      redirectUri
+    );
+    if (browserResult.type !== "success")
+      throw new Error("Échec de la session OAuth Apple");
+
+    const url = new URL(browserResult.url);
+    const secret = url.searchParams.get("secret")?.toString();
+    const userId = url.searchParams.get("userId")?.toString();
+    if (!secret || !userId) throw new Error("Session Apple invalide");
+
+    const session = await account.createSession(userId, secret);
+    if (!session) throw new Error("Échec lors de la création de session Apple");
+
+    return true;
+  } catch (error) {
+    console.error("Apple login error:", error);
     return false;
   }
 }
@@ -133,5 +168,40 @@ export async function getPharmaciesById({ id }: { id: string }) {
   } catch (error) {
     console.error(error);
     return null;
+  }
+}
+
+export async function createUserIfNotExists() {
+  try {
+    const user = await getCurrentUser();
+    if (!user) throw new Error("Utilisateur non authentifié");
+
+    const query = [Query.equal("userId", user.$id)];
+
+    const result = await databases.listDocuments(
+      config.databaseId!,
+      config.userCollectionId!,
+      query
+    );
+
+    if (result.documents.length === 0) {
+      // utilisateur n'existe pas encore, on le crée
+      await databases.createDocument(
+        config.databaseId!,
+        config.userCollectionId!,
+        ID.unique(),
+        {
+          userId: user.$id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+        }
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de l'utilisateur :", error);
+    return false;
   }
 }
