@@ -10,6 +10,9 @@ import {
 } from "react-native-appwrite";
 import * as Linking from "expo-linking";
 import { openAuthSessionAsync } from "expo-web-browser";
+import * as Location from "expo-location";
+import { getDistance } from "geolib";
+
 export const config = {
   platform: "com.abasco.native",
   endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
@@ -19,6 +22,7 @@ export const config = {
     process.env.EXPO_PUBLIC_APPWRITE_PHARMACIES_COLLECTIONS_ID,
   userCollectionId: process.env.EXPO_PUBLIC_APPWRITE_USER_COLLECTIONS_ID,
 };
+
 export const client = new Client();
 
 client
@@ -185,7 +189,6 @@ export async function createUserIfNotExists() {
     );
 
     if (result.documents.length === 0) {
-      // utilisateur n'existe pas encore, on le crée
       await databases.createDocument(
         config.databaseId!,
         config.userCollectionId!,
@@ -204,4 +207,83 @@ export async function createUserIfNotExists() {
     console.error("Erreur lors de l'enregistrement de l'utilisateur :", error);
     return false;
   }
+}
+
+export async function getNearbyPharmacies(): Promise<any[]> {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.warn("Permission de localisation refusée");
+      return [];
+    }
+
+    const userLocation = await Location.getCurrentPositionAsync({});
+    const { latitude: userLat, longitude: userLon } = userLocation.coords;
+
+    const result = await databases.listDocuments(
+      config.databaseId!,
+      config.pharmaciesCollectionId!,
+      [Query.limit(100)] // Tu peux ajuster ce nombre selon ton besoin
+    );
+
+    const pharmaciesWithDistance = result.documents
+      .map((pharmacy) => {
+        const pharmacyLat = pharmacy.latitude;
+        const pharmacyLon = pharmacy.longitude;
+
+        if (
+          typeof pharmacyLat !== "number" ||
+          typeof pharmacyLon !== "number"
+        ) {
+          return null;
+        }
+
+        const distance = getDistanceFromLatLonInKm(
+          userLat,
+          userLon,
+          pharmacyLat,
+          pharmacyLon
+        );
+
+        return {
+          ...pharmacy,
+          distance,
+        };
+      })
+      .filter(Boolean) // retire les null
+      .sort((a, b) => {
+        if (!a || !b) return 0;
+        return a.distance - b.distance;
+      }); // tri par distance
+
+    return pharmaciesWithDistance;
+  } catch (error) {
+    console.error("Erreur getNearbyPharmacies:", error);
+    return [];
+  }
+}
+
+// Fonction utilitaire pour calculer la distance entre deux coordonnées
+function getDistanceFromLatLonInKm(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const R = 6371; // Rayon de la terre en km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = R * c;
+  return d;
+}
+
+function deg2rad(deg: number): number {
+  return deg * (Math.PI / 180);
 }

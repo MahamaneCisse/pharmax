@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -16,8 +16,7 @@ import Search from "@/components/Search";
 import NoResults from "@/components/NoResults";
 import { FeaturedCard } from "@/components/Cards";
 import { useGlobalContext } from "@/lib/global-provider";
-import { useAppwrite } from "@/lib/useAppwrite";
-import { getPharmacies } from "@/lib/appwrite"; // getLatestPharmacies supprimé ici
+import { getNearbyPharmacies } from "@/lib/appwrite"; // ici
 
 const Index = () => {
   const { user } = useGlobalContext();
@@ -26,35 +25,39 @@ const Index = () => {
 
   const params = useLocalSearchParams<{ query?: string; filter?: string }>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [pharmacies, setPharmacies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const {
-    data: pharmacies,
-    loading,
-    refetch,
-  } = useAppwrite({
-    fn: getPharmacies,
-    params: {
-      filter: params.filter ?? "",
-      query: searchQuery,
-      limit: 6,
-    },
-    skip: false,
-  });
+  const fetchPharmacies = async () => {
+    setLoading(true);
+    const data = await getNearbyPharmacies();
+    setPharmacies(data);
+    setLoading(false);
+  };
 
-  const debouncedRefetch = useDebouncedCallback((text: string) => {
-    refetch({
-      filter: params.filter ?? "",
-      query: text,
-      limit: 6,
-    });
+  useEffect(() => {
+    fetchPharmacies();
+  }, []);
+
+  const debouncedSearch = useDebouncedCallback((text: string) => {
+    setSearchQuery(text);
   }, 500);
+
+  const filteredPharmacies = pharmacies.filter((pharmacy) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      pharmacy.name?.toLowerCase().includes(query) ||
+      pharmacy.ville?.toLowerCase().includes(query) ||
+      pharmacy.quartier?.toLowerCase().includes(query)
+    );
+  });
 
   const handleCardPress = (id: string) => router.push(`/properties/${id}`);
 
   return (
     <SafeAreaView className="h-full bg-white">
       <FlatList
-        data={pharmacies}
+        data={filteredPharmacies}
         renderItem={({ item }) => (
           <FeaturedCard item={item} onPress={() => handleCardPress(item.$id)} />
         )}
@@ -97,18 +100,16 @@ const Index = () => {
             <Search
               value={searchQuery}
               onChange={(text) => {
-                setSearchQuery(text);
-                debouncedRefetch(text);
+                debouncedSearch(text);
               }}
             />
 
-            {/* Loading & Empty State */}
             {loading ? (
               <ActivityIndicator
                 size="large"
                 className="text-primary-300 mt-5"
               />
-            ) : (pharmacies?.length ?? 0) === 0 ? (
+            ) : filteredPharmacies.length === 0 ? (
               <NoResults />
             ) : null}
           </View>

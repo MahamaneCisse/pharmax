@@ -3,15 +3,14 @@ import images from "@/constants/images";
 import { Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { Models } from "react-native-appwrite";
 import React from "react";
-import { router } from "expo-router";
 
 interface Props {
-  item: Models.Document;
+  item: Models.Document & { distance?: number };
   onPress?: () => void;
 }
 
 export const FeaturedCard = ({
-  item: { horaire, name, ville, quartier, rue, porte, contact },
+  item: { horaire, name, ville, quartier, rue, porte, contact, distance },
   onPress,
 }: Props) => {
   const numero = contact;
@@ -20,7 +19,7 @@ export const FeaturedCard = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center w-full bg-white rounded-2xl shadow-md p-4  gap-4"
+      className="flex-row items-center w-full bg-white rounded-2xl shadow-md p-4 gap-4"
     >
       {/* Logo */}
       <View className="w-20 h-20 rounded-full border-2 border-white overflow-hidden justify-center items-center">
@@ -47,12 +46,17 @@ export const FeaturedCard = ({
         </View>
 
         {/* Horaire */}
-        <Text className="mt-2 text-sm text-green-600 font-medium">
-          <View>
-            <Image source={icons.horloge} className="size-4 mr-2" />
-          </View>
-          {horaire}
-        </Text>
+        <View className="mt-2 flex-row items-center">
+          <Image source={icons.horloge} className="w-4 h-4 mr-1" />
+          <Text className="text-sm text-green-600 font-medium">{horaire}</Text>
+        </View>
+
+        {/* Distance */}
+        {distance !== undefined && (
+          <Text className="mt-1 text-xs text-gray-500">
+            📍 À environ {distance.toFixed(1)} km
+          </Text>
+        )}
       </View>
 
       {/* Actions */}
