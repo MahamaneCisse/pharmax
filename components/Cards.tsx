@@ -9,12 +9,28 @@ interface Props {
   onPress?: () => void;
 }
 
-export const FeaturedCard = ({
+export const PharmacieCard = ({
   item: { horaire, name, ville, quartier, rue, porte, contact, distance },
   onPress,
 }: Props) => {
   const numero = contact;
-  const appeler = () => Linking.openURL(`tel:${numero}`);
+  const appeler = () => {
+    if (numero) Linking.openURL(`tel:${numero}`);
+  };
+
+  const openInMaps = () => {
+    if (ville) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        name + ", " + ville
+      )}`;
+      Linking.openURL(url);
+    }
+  };
+
+  const adressePrincipale = [ville, quartier].filter(Boolean).join(", ");
+  const adresseSecondaire = [rue && `Rue: ${rue}`, porte && `Porte: ${porte}`]
+    .filter(Boolean)
+    .join(" | ");
 
   return (
     <TouchableOpacity
@@ -22,7 +38,7 @@ export const FeaturedCard = ({
       className="flex-row items-center w-full bg-white rounded-2xl shadow-md p-4 gap-4"
     >
       {/* Logo */}
-      <View className="w-20 h-20 rounded-full border-2 border-white overflow-hidden justify-center items-center">
+      <View className="w-20 h-20 rounded-full border-2 border-white overflow-hidden justify-center items-center bg-gray-100">
         <Image
           source={images.logoPharm}
           className="w-full h-full"
@@ -30,32 +46,35 @@ export const FeaturedCard = ({
         />
       </View>
 
-      {/* Content */}
+      {/* Contenu principal */}
       <View className="flex-1">
-        {/* Header */}
         <Text className="text-xl font-semibold text-gray-900">{name}</Text>
 
-        {/* Address */}
         <View className="mt-1 space-y-0.5">
-          <Text className="text-gray-700">
-            {ville}, {quartier}
-          </Text>
-          <Text className="text-gray-600 text-sm">
-            Rue: {rue} | Porte: {porte}
-          </Text>
+          <Text className="text-gray-700">{adressePrincipale}</Text>
+          <Text className="text-gray-600 text-sm">{adresseSecondaire}</Text>
         </View>
 
-        {/* Horaire */}
-        <View className="mt-2 flex-row items-center">
-          <Image source={icons.horloge} className="w-4 h-4 mr-1" />
-          <Text className="text-sm text-green-600 font-medium">{horaire}</Text>
-        </View>
+        {horaire && (
+          <View className="mt-2 flex-row items-center">
+            <Image source={icons.horloge} className="w-4 h-4 mr-1" />
+            <Text className="text-sm text-green-600 font-medium">
+              {horaire}
+            </Text>
+          </View>
+        )}
 
-        {/* Distance */}
         {distance !== undefined && (
-          <Text className="mt-1 text-xs text-gray-500">
-            📍 À environ {distance.toFixed(1)} km
-          </Text>
+          <View className="mt-2 flex-row items-center gap-1">
+            <Image
+              source={icons.location}
+              className="w-5 h-5"
+              resizeMode="contain"
+            />
+            <Text className="mt-1 text-xs text-gray-500">
+              À environ {distance.toFixed(1)} km
+            </Text>
+          </View>
         )}
       </View>
 
@@ -68,7 +87,7 @@ export const FeaturedCard = ({
             resizeMode="contain"
           />
         </TouchableOpacity>
-        <TouchableOpacity className="p-2">
+        <TouchableOpacity className="p-2" onPress={openInMaps}>
           <Image
             source={icons.location}
             className="w-5 h-5"

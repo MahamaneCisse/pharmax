@@ -33,16 +33,28 @@ const SettingsItem = ({
 }: SettingsItemProp) => (
   <TouchableOpacity
     onPress={onPress}
-    className="flex flex-row items-center justify-between py-3"
+    className="flex-row items-center justify-between py-4 border-b border-gray-100"
   >
-    <View className="flex flex-row items-center gap-3">
-      <Image source={icon} className="size-6" />
-      <Text className={`text-lg font-rubik-medium text-black-300 ${textStyle}`}>
+    <View className="flex-row items-center gap-4">
+      <Image
+        source={icon}
+        className="w-6 h-6 opacity-70"
+        resizeMode="contain"
+      />
+      <Text
+        className={`text-base font-rubik-regular text-gray-800 ${textStyle}`}
+      >
         {title}
       </Text>
     </View>
 
-    {showArrow && <Image source={icons.rightArrow} className="size-5" />}
+    {showArrow && (
+      <Image
+        source={icons.rightArrow}
+        className="w-4 h-4 opacity-50"
+        resizeMode="contain"
+      />
+    )}
   </TouchableOpacity>
 );
 
@@ -52,7 +64,7 @@ const Profile = () => {
   const handleLogout = async () => {
     const result = await logout();
     if (result) {
-      Alert.alert("Succès", "Deconnexion réussie");
+      Alert.alert("Succès", "Déconnexion réussie");
       refetch();
     } else {
       Alert.alert("Erreur", "Erreur lors de la déconnexion");
@@ -60,37 +72,46 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-32 px-7"
+        contentContainerClassName="pb-32 px-6"
       >
-        <View className="flex flex-row items-center justify-between mt-5">
-          <Text className="text-xl font-rubik-bold">Profile</Text>
-          <Image source={icons.bell} className="size-5" />
+        {/* Header */}
+        <View className="flex-row items-center justify-between mt-6">
+          <Text className="text-2xl font-rubik-bold text-gray-900">
+            Mon profil
+          </Text>
+          <Image source={icons.bell} className="w-5 h-5 opacity-60" />
         </View>
 
-        <View className="flex flex-row justify-center mt-5">
-          <View className="flex flex-col items-center relative mt-5">
+        {/* Avatar */}
+        <View className="items-center mt-8">
+          <View className="w-40 h-40 rounded-full shadow-md shadow-black/10 overflow-hidden">
             <Image
               source={{ uri: user?.avatar }}
-              className="size-44 relative rounded-full"
+              className="w-full h-full"
+              resizeMode="cover"
             />
-            <Text className="text-2xl font-rubik-bold mt-2">{user?.name}</Text>
           </View>
+          <Text className="text-xl font-rubik-medium mt-4 text-gray-800">
+            {user?.name}
+          </Text>
         </View>
 
-        <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
+        {/* Settings */}
+        <View className="mt-8">
           {settings.map((item, index) => (
             <SettingsItem key={index} {...item} />
           ))}
         </View>
 
-        <View className="flex flex-col border-t mt-5 pt-5 border-primary-200">
+        {/* Logout */}
+        <View className="mt-8 border-t border-gray-100 pt-4">
           <SettingsItem
             icon={icons.logout}
-            title="Deconnexion"
-            textStyle="text-danger"
+            title="Déconnexion"
+            textStyle="text-red-500 font-rubik-medium"
             showArrow={false}
             onPress={handleLogout}
           />

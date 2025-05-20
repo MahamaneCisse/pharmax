@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, TextInput } from "react-native";
+import { View, Image, TextInput, Platform } from "react-native";
 import { useDebouncedCallback } from "use-debounce";
 import icons from "@/constants/icons";
 
@@ -13,28 +13,35 @@ const Search = ({ value, onChange }: SearchProps) => {
 
   const debouncedChange = useDebouncedCallback((text: string) => {
     onChange(text);
-  }, 1000);
+  }, 500); // 500ms pour plus de réactivité
 
   const handleSearch = (text: string) => {
     setSearch(text);
     debouncedChange(text);
   };
 
+  // Synchronisation externe
   useEffect(() => {
     setSearch(value);
   }, [value]);
 
   return (
-    <View className="flex flex-row items-center justify-between w-full px-4 rounded-lg bg-accent-100 border border-primary-100 mt-5 py-2">
-      <View className="flex-1 flex flex-row items-center justify-start z-50">
-        <Image source={icons.search} className="size-5" />
-        <TextInput
-          value={search}
-          onChangeText={handleSearch}
-          placeholder="Rechercher une pharmacie..."
-          className="text-sm font-rubik text-black-300 ml-2 flex-1"
-        />
-      </View>
+    <View className="flex-row items-center w-full mt-5 px-4 py-2 rounded-lg bg-accent-100 border border-primary-100">
+      <Image source={icons.search} className="w-5 h-5" resizeMode="contain" />
+
+      <TextInput
+        value={search}
+        onChangeText={handleSearch}
+        placeholder="Rechercher une pharmacie..."
+        placeholderTextColor="#888"
+        className="ml-2 flex-1 text-sm text-black-300 font-rubik"
+        accessible
+        accessibilityLabel="Champ de recherche"
+        returnKeyType="search"
+        autoCapitalize="none"
+        autoCorrect={false}
+        clearButtonMode={Platform.OS === "ios" ? "while-editing" : "never"}
+      />
     </View>
   );
 };

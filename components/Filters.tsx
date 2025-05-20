@@ -1,64 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { router, useLocalSearchParams } from "expo-router";
-import { Text, ScrollView, TouchableOpacity } from "react-native";
-import { useAppwrite } from "@/lib/useAppwrite";
-import { getPharmacies } from "@/lib/appwrite";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { getFilterOptions } from "../lib/appwrite"; // adapte le chemin
 
-const Filters = () => {
-  const params = useLocalSearchParams<{ filter?: string }>();
-  const [selectedVille, setSelectedVille] = useState(params.filter || "Toutes");
-  const [uniqueVilles, setUniqueVilles] = useState<string[]>([]);
+type FiltersProps = {
+  selected: { ville?: string; quartier?: string };
+  onChange: (key: "ville" | "quartier", value: string) => void;
+};
 
-  const { data: pharmacies, loading } = useAppwrite({
-    fn: getPharmacies,
-    params: {
-      filter: "", // récupérer toutes les pharmacies
-      query: "",
-    },
-    skip: false,
-  });
+const Filters = ({ selected, onChange }: FiltersProps) => {
+  const [filterOptions, setFilterOptions] = useState<{
+    ville: string[];
+    quartier: string[];
+  }>({ ville: [], quartier: [] });
+  const [loading, setLoading] = useState(true);
 
-  // Extraire les villes uniques
   useEffect(() => {
-    if (pharmacies && pharmacies.length > 0) {
-      const villes = Array.from(new Set(pharmacies.map((p: any) => p.ville)));
-      setUniqueVilles(["Toutes", ...villes]);
-    }
-  }, [pharmacies]);
+    const loadOptions = async () => {
+      const data = await getFilterOptions();
+      setFilterOptions({
+        ville: ["Toutes", ...data.ville],
+        quartier: ["Toutes", ...data.quartier],
+      });
+      setLoading(false);
+    };
 
-  const handleVillePress = (ville: string) => {
-    setSelectedVille(ville);
-    router.setParams({ filter: ville === "Toutes" ? "" : ville });
-  };
+    loadOptions();
+  }, []);
+
+  const renderGroup = (key: "ville" | "quartier", options: string[]) => (
+    <View className="mb-3">
+      <Text className="font-rubik-medium text-black mb-2 capitalize">
+        {key}
+      </Text>
+      <View className="flex-row flex-wrap gap-2">
+        {options.map((opt) => {
+          const value = opt === "Toutes" ? "" : opt;
+          const isActive =
+            selected[key] === value || (!selected[key] && opt === "Toutes");
+
+          return (
+            <TouchableOpacity
+              key={opt}
+              onPress={() => onChange(key, value)}
+              className={`px-3 py-1 rounded-full border ${
+                isActive
+                  ? "bg-primary-100 border-primary-100"
+                  : "border-gray-300"
+              }`}
+            >
+              <Text className={isActive ? "text-white" : "text-black"}>
+                {opt}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+
+  if (loading) {
+    return (
+      <View className="mt-4 px-2 items-center">
+        <ActivityIndicator size="small" color="#00B0FF" />
+        <Text className="text-gray-400 mt-2">Chargement des filtres…</Text>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      className="mt-3 mb-2 px-4"
-    >
-      {uniqueVilles.map((ville, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => handleVillePress(ville)}
-          className={`mr-3 px-4 py-2 rounded-full ${
-            selectedVille === ville
-              ? "bg-primary-300"
-              : "bg-primary-100 border border-primary-200"
-          }`}
-        >
-          <Text
-            className={`text-sm ${
-              selectedVille === ville
-                ? "text-white font-rubik"
-                : "text-black-300 font-rubik"
-            }`}
-          >
-            {ville}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+    <View className="mt-4 px-2">
+      {renderGroup("ville", filterOptions.ville)}
+      {renderGroup("quartier", filterOptions.quartier)}
+    </View>
   );
 };
 

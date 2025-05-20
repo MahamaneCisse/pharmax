@@ -1,40 +1,35 @@
 import icons from "./icons";
-import images from "./images";
-
-export const Villes = [
-  { title: "Toutes", ville: "Toutes" },
-  { title: "Bamako", ville: "Bamako" },
-  { title: "Segou", ville: "Segou" },
-  { title: "Kayes", ville: "Kayes" },
-  { title: "Tombouctou", ville: "Tombouctou" },
-  { title: "Mopti", ville: "Mopti" },
-  { title: "Mopti", ville: "Mopti" },
-  { title: "Plus Proche", ville: "plusProche" },
-];
+import { shareApp } from "@/utils/share";
 
 export const settings = [
   {
     title: "Mon compte",
     icon: icons.person,
+    onPress: () => console.log("EditProfile"),
   },
   {
     title: "Notifications",
     icon: icons.bell,
+    onPress: () => console.log("Notifications"),
   },
   {
     title: "Sécurité",
     icon: icons.shield,
+    onPress: () => console.log("Sécurité"),
   },
   {
     title: "Langue",
     icon: icons.language,
+    onPress: () => console.log("Changer de langue"),
   },
   {
     title: "Centre d'aide",
     icon: icons.info,
+    onPress: () => console.log("Centre d'aide"),
   },
   {
     title: "Inviter un ami",
     icon: icons.people,
+    onPress: shareApp, // fonction d'invitation
   },
 ];

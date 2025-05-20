@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  FlatList,
   Image,
   ScrollView,
   Text,
@@ -9,16 +8,15 @@ import {
   Dimensions,
   Platform,
   Linking,
-  ActivityIndicator,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
 import icons from "@/constants/icons";
 import images from "@/constants/images";
 import MapView, { Marker } from "react-native-maps";
-
+import { Models } from "react-native-appwrite";
 import { useAppwrite } from "@/lib/useAppwrite";
-import { getPharmaciesById } from "@/lib/appwrite";
+import { getNearbyPharmacies, getPharmaciesById } from "@/lib/appwrite";
 import Loader from "@/components/Loader";
 const Property = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -111,21 +109,13 @@ const Property = () => {
 
           <View className="mt-7">
             <Text className="text-black-300 text-xl font-rubik-bold">
-              Apropos
-            </Text>
-            <Text className="text-black-200 text-base font-rubik mt-2">
-              {property?.apropos}
-            </Text>
-          </View>
-
-          <View className="mt-7">
-            <Text className="text-black-300 text-xl font-rubik-bold">
               Localisation
             </Text>
             <View className="flex flex-row items-center justify-start mt-4 gap-2">
               <Image source={icons.location} className="w-7 h-7" />
               <Text className="text-black-200 text-sm font-rubik-medium">
-                {property?.quartier}, {property?.ville}
+                {property?.quartier}, {property?.ville} - A environ{" "}
+                {property?.distance.toFixed(1)} km
               </Text>
             </View>
 
@@ -162,6 +152,14 @@ const Property = () => {
               Ouvrir l’itinéraire dans Google Maps
             </Text>
           </TouchableOpacity>
+          <View className="mt-7">
+            <Text className="text-black-300 text-xl font-rubik-bold">
+              Apropos
+            </Text>
+            <Text className="text-black-200 text-base font-rubik mt-2">
+              {property?.apropos}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>
