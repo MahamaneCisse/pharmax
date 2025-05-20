@@ -13,14 +13,13 @@ const Search = ({ value, onChange }: SearchProps) => {
 
   const debouncedChange = useDebouncedCallback((text: string) => {
     onChange(text);
-  }, 500); // 500ms pour plus de réactivité
+  }, 500);
 
   const handleSearch = (text: string) => {
     setSearch(text);
     debouncedChange(text);
   };
 
-  // Synchronisation externe
   useEffect(() => {
     setSearch(value);
   }, [value]);

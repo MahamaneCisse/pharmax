@@ -10,14 +10,9 @@ import { PharmacieCard } from "@/components/Cards";
 import NoResults from "@/components/NoResults";
 import { getPharmacies } from "@/lib/appwrite";
 import { useAppwrite } from "@/lib/useAppwrite";
-import Filters from "@/components/Filters";
 const Explore = () => {
   const params = useLocalSearchParams<{ query?: string; filter?: string }>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterState, setFilterState] = useState({
-    ville: "",
-    quartier: "",
-  });
 
   const {
     data: pharmacies,
@@ -32,17 +27,6 @@ const Explore = () => {
     skip: true,
   });
 
-  const handleFilterChange = useCallback(
-    (key: string, value: string) => {
-      setFilterState((prev) => ({ ...prev, [key]: value }));
-      refetch({
-        filter: `${key}:${value}`, // tu peux adapter selon ton backend
-        query: searchQuery,
-      });
-    },
-    [searchQuery]
-  );
-  // Requête initiale lors du montage ou changement d’URL params
   useEffect(() => {
     setSearchQuery(params.query ?? "");
     refetch({
@@ -51,7 +35,6 @@ const Explore = () => {
     });
   }, [params.filter, params.query]);
 
-  // Requête en direct à chaque frappe (après délai)
   const debouncedRefetch = useDebouncedCallback((text: string) => {
     refetch({
       filter: params.filter ?? "",

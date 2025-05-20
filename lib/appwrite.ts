@@ -11,7 +11,6 @@ import {
 import * as Linking from "expo-linking";
 import { openAuthSessionAsync } from "expo-web-browser";
 import * as Location from "expo-location";
-import { getDistance } from "geolib";
 
 export const config = {
   platform: "com.abasco.native",
@@ -36,7 +35,6 @@ export const storage = new Storage(client);
 let cachedUser: any = null;
 let cachedLocation: Location.LocationObject | null = null;
 
-// UTILS
 function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,

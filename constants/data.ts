@@ -30,6 +30,6 @@ export const settings = [
   {
     title: "Inviter un ami",
     icon: icons.people,
-    onPress: shareApp, // fonction d'invitation
+    onPress: shareApp,
   },
 ];

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -14,10 +13,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
 import MapView, { Marker } from "react-native-maps";
-import { Models } from "react-native-appwrite";
 import { useAppwrite } from "@/lib/useAppwrite";
-import { getNearbyPharmacies, getPharmaciesById } from "@/lib/appwrite";
+import { getPharmaciesById } from "@/lib/appwrite";
 import Loader from "@/components/Loader";
+import React from "react";
 const Property = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
 
