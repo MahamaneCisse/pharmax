@@ -19,7 +19,10 @@
         "foregroundImage": "./assets/images/pharmax.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["ACCESS_FINE_LOCATION"]
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.torisidis.pharmax"
     },
     "web": {
       "bundler": "metro",
@@ -54,9 +57,16 @@
         }
       ]
     ],
-
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8c180f7f-7d8c-4cc3-b8e3-e8f852b39099"
+      }
     }
   }
 }

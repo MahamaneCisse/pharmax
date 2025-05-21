@@ -81,7 +81,6 @@ export async function getCurrentUser() {
       return cachedUser;
     }
   } catch (error) {
-    console.error(error);
     return null;
   }
 }

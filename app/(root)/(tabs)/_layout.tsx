@@ -35,7 +35,9 @@ const TabIcon = ({
 
 const TabsLayout = () => {
   const [fontsLoaded] = useFonts({
-    "copperplate-bold": require("@/assets//fonts/Copperplate-Gothic-Std-33-BC.ttf"),
+    "rubik-regular": require("@/assets/fonts/Rubik-Regular.ttf"),
+    "rubik-medium": require("@/assets/fonts/Rubik-Medium.ttf"),
+    "rubik-bold": require("@/assets/fonts/Rubik-Bold.ttf"),
   });
   useEffect(() => {
     if (fontsLoaded) {

@@ -17,7 +17,6 @@ import rightArrow from "@/assets/icons/right-arrow.png";
 import send from "@/assets/icons/send.png";
 import phone from "@/assets/icons/phone.png";
 import location from "@/assets/icons/location.png";
-import edit from "@/assets/icons/edit.png";
 import apple from "@/assets/icons/apple.png";
 import appel_durgence from "@/assets/icons/appel-durgence.png";
 import horloge from "@/assets/icons/horloge.png";
@@ -42,7 +41,6 @@ export default {
   send,
   phone,
   location,
-  edit,
   appel_durgence,
   horloge,
 };

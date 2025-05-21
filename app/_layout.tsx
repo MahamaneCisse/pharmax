@@ -12,7 +12,6 @@ export default function RootLayout() {
     "Rubik-Medium": require("../assets/fonts/Rubik-Medium.ttf"),
     "Rubik-Regular": require("../assets/fonts/Rubik-Regular.ttf"),
     "Rubik-SemiBold": require("../assets/fonts/Rubik-SemiBold.ttf"),
-    "copperplate-bold": require("../assets/fonts/Copperplate-Gothic-Std-33-BC.ttf"),
   });
   useEffect(() => {
     if (fontsLoaded) {
